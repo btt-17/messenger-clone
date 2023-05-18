@@ -1,0 +1,127 @@
+* {
+    list-style: none;
+}
+
+.chat-head {
+    display: flex;
+    height: 4vh;
+    padding: 15px 18px ;
+    background-color: rgba(34, 33, 33,0.4);
+    border-bottom: thin solid rgb(53, 52, 52);
+}
+
+.chat-info {
+    width: 15vw;
+    display: flex;
+    font-size: 1.3em;
+}
+.chat-info .chat-option-logo {
+    height: 28px;
+    width: 28px;
+    margin-bottom: 20px;
+}
+.chat-info * {
+    margin-right: 8px;
+}
+.chat-info .option {
+    padding-top: 3.5px;
+}
+.image {
+    width: 34px;
+    height: 34px;       
+    border-radius: 50%;
+}
+
+.avatar {
+    position: absolute;
+    width: 34px;
+    height: 34px;       
+    border-radius: 50%;
+    background-image: url('../assests/defaultAvatar.jpeg');
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    -webkit-background-size: 100% !important;
+    -moz-background-size: 100% !important;
+    -o-background-size: 100% !important;
+    background-size: 100% !important;
+}
+
+.chat-name {
+    padding-top: 4px;
+}
+
+
+
+
+/* ----------- Content ----------- */
+
+.chat-content {
+    overflow: auto;
+    height: 80vh;
+    padding: 2px 10px;
+}
+
+.receiver {
+    display: flex;
+}
+
+.sender {
+   margin: 20px 0px;
+   /* text-align: center; */
+   display: flex;
+   justify-content: flex-end;
+}
+
+.sender span {
+    margin-left: 60vw;
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(20, 94, 243); 
+    padding: 8px 10px;
+    border-radius: 14px;
+}
+
+.sender .image {
+    display: none;
+}
+
+
+.receiver .image {
+    margin-right: 6px;
+}
+.receiver span {
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(84, 85, 86); 
+    padding: 8px 10px;
+    border-radius: 14px;
+}
+
+/* ----------- Send Message ----------- */
+
+.send-message {
+    display: flex;
+    justify-content: space-around;
+    height: 5vh;
+    padding: 1px 10px 3px;
+}
+
+.chat-option-logo {
+    height: 25px;
+    width: 25px;
+    color: rgb(20, 94, 243);
+}
+
+.message-input {
+    margin-right: 5px;
+}
+.message-input input { 
+    width: 60vw;
+    padding: 1px 9px;
+    font-size: 1.1em;
+    border-radius: 10px;
+    background-color: rgb(39, 39, 38);
+    color: white;
+}
+
+

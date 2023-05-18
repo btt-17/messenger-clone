@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import { 
   LoginForm,
-  MainView
+  MainView,
 } from './components';
 
 function App() {

@@ -1,13 +1,11 @@
 import './MainView.css';
-import React, {useEffect, useState} from 'react';
+import  {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
-// import { ReactComponent as ChatLogo } from '../assests/chat.svg';
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faComment, faVideo, faUserGroup, faClone } from '@fortawesome/free-solid-svg-icons'
-
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import ChatView from '../ChatView/ChatView';
 
 
 const faCommentPropIcon = faComment as IconProp;
@@ -38,7 +36,7 @@ function MainView() {
                         <button onClick={handleLogout}>Logout </button>
                     </div>
                     <div className='chat-view'>
-                        Chat View
+                        <ChatView />
                     </div>
                 </div>
                 <div className='footer-container'>
