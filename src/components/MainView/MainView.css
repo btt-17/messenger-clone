@@ -1,0 +1,42 @@
+.view-container {
+    display: flex;
+    height: 92vh;
+}
+
+.chat-list {
+    border-right: thin solid  rgb(83, 80, 80);
+    /* border-style: solid;
+    border-width: thin;
+    border-color: rgb(198, 189, 189); */
+}
+
+.chat-list { 
+    width: 25%;
+}
+
+.chat-view {
+    width: 75%;
+}
+
+.footer-container {
+    height: 4vh;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.9rem 3rem;
+   
+}
+
+.option{
+    display: flex;
+}
+.option-name {
+    font-size: 15px;
+    margin-top:7px;
+}
+.logo { 
+    height: 30px;
+    width: 30px;
+    color: rgb(232, 225, 225);
+    margin-right: 8px;
+}
+
