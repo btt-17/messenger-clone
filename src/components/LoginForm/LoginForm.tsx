@@ -18,12 +18,21 @@ function LoginForm() {
             withCredentials: true,
         })
 
-        if (res.data.data === "successfully") {
+        let userData = JSON.parse(res.data.data);
+
+
+        if (res.data.status === "successfully") {
             setUserEmail("");
             setUserPassword("");
             setAuthenticated("true");
+            
             localStorage.setItem("authenticated","true");
-            console.log("LoginForm line 26: ", localStorage.getItem("authenticated"))
+            localStorage.setItem("userid", userData[0].id);
+            localStorage.setItem("username", userData[0].username);
+            
+            console.log(localStorage.getItem("userid"));
+            console.log(localStorage.getItem("username"));
+
             navigate("/");
         }
     }

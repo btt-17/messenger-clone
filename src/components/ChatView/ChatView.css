@@ -63,6 +63,7 @@
 
 .receiver {
     display: flex;
+    justify-content: flex-start;
 }
 
 .sender {

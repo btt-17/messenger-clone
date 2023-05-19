@@ -10,7 +10,8 @@ import {
     faPaperPlane,  
 } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import { ListFormat } from 'typescript';
 
 const faCirclePlusPropIcon = faCirclePlus as IconProp;
 const faCameraPropIcon = faCamera as IconProp;
@@ -21,37 +22,47 @@ const faTableColumnsPropIcon = faTableColumns as IconProp;
 const faPaperPlanePropIcon = faPaperPlane as IconProp;
 
 
-const dummy_messages = [
-   ["example 1", "sender"],
-   ["example 2", "sender"],
-   ["example 3", "receiver"],
-   ["longer example 4", "sender"],
-]
+interface ChatViewProps {
+    id: string | null,
+    username: string | null,
+}
 
 
+type MessageProp = {
+    content: string,
+    from: string,
+}
 
-const ListMessage = () => (
-    <div className='list-message'>
-      {dummy_messages.map(item => (
-        <div key={item[0]} className={item[1]}>
-            <div className="image">
-                <div className='avatar'>
-                </div>
-            </div>
-            <span>{item[0]}</span>
-        </div>
-      ))}
-    </div>
-  );
-
-function ChatView () {
+const ChatView: React.FC<ChatViewProps>  = (props) =>  {
+    const date = new Date();
     const [userMessage, setUserMessage] = useState('');
+   
+    const [messages, setMessages] = useState<MessageProp[]>([]);
+
+    useEffect(() => {
+        const keyDownHandler = (event: { key: string; preventDefault: () => void; }) => {
+          console.log('User pressed: ', event.key);
+    
+          if (event.key === 'Enter') {
+            event.preventDefault();
+    
+            // 👇️ call submit function here
+            handleSendMessage();
+          }
+        };
+
+      }, []);
+
     const handleSendMessage = () => {
-        dummy_messages.push([userMessage,"sender"]);
-        console.log(dummy_messages);
-        setUserMessage("");
-        ListMessage();
+        // dummy_messages.push([userMessage,"sender"]);
+        if (userMessage !== '') {
+            setMessages(messages => [...messages, {content: userMessage, from: "sender"}])
+            setUserMessage("");
+        }
     }
+
+
+  
 
     let button;
     if (userMessage === "") {
@@ -68,15 +79,25 @@ function ChatView () {
                         <FontAwesomeIcon className='chat-option-logo' icon={faTableColumnsPropIcon} />   
                     </div>
                     <div className="image">
-                        <div className='avatar'>
-
-                        </div>
+                        <div className='avatar'> </div>
                     </div>
-                    <div className='chat-name'>Test bot 1</div>
+                    <div className='chat-name'>{props.username}</div>
                 </div>
             </div> 
             <div className='chat-content'>
-               <ListMessage></ListMessage>
+                <div className='list-message'>
+                    {
+                        messages.map((item,index) => (
+                            <div key={index} className={item.from}>
+                                <div className="image">
+                                    <div className='avatar'>
+                                    </div>
+                                </div>
+                                <span>{item.content}</span>
+                            </div>
+                        ))
+                    }
+                </div>
             </div>
             <div className='send-message'>
                     <div className='option' >
@@ -96,11 +117,15 @@ function ChatView () {
                    </div>
 
                    <div className="message-input">
-                        <input type='text' placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}></input>
+                        <input type='text' placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") {
+                                handleSendMessage()
+                            }
+                        }}></input>
                     </div>
 
                    <div className='option' >
-                        {/* <FontAwesomeIcon className='chat-option-logo' icon={faThumbsUpPropIcon} />    */}
                         {button}
                    </div>
 

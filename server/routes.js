@@ -7,16 +7,17 @@ router.post('/api/login', async(req,res) => {
 
     const data = await dbConnect.collection("Users"). find({
         mail: req.body.mail,
-        password: req.body.password
+        password: req.body.password,
     }).toArray() ;
 
+
     if (data.length === 0) {
-        res.status(200).json({data: "Your username or password is wrong!"});
+        res.status(200).json({status: "Your username or password is wrong!"});
         console.log("Your username or password is wrong!", req.body.mail, req.body.password)
     }
 
     if (data.length !== 0){
-        res.status(200).json({data: "successfully"})
+        res.status(200).json({status: "successfully", data: JSON.stringify(data)})
         console.log("successfully")
     }
 

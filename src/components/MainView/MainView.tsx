@@ -14,15 +14,23 @@ const faUserGroupPropIcon = faUserGroup as IconProp;
 const faClonePropIcon = faClone as IconProp;
 
 
+
 function MainView() {
     const [active, setActive] = useState(false);
     const handleClick = () => {
         setActive(!active);
     };
 
+    let userId = localStorage.getItem("userid");
+    let userName = localStorage.getItem("username");
+
+
+
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.setItem("authenticated","false");
+        localStorage.setItem("userid","");
+        localStorage.setItem("useritem","");
         navigate("/login");
     }
 
@@ -34,9 +42,10 @@ function MainView() {
                 <div className='view-container'>
                     <div className='chat-list'>
                         <button onClick={handleLogout}>Logout </button>
+                        <div>User Id: {userId}</div>
                     </div>
                     <div className='chat-view'>
-                        <ChatView />
+                        <ChatView id={userId} username={userName} />
                     </div>
                 </div>
                 <div className='footer-container'>
