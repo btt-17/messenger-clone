@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faComment, faVideo, faUserGroup, faClone } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ChatView from '../ChatView/ChatView';
+import ChatList from '../ChatList/ChatList';
 
 
 const faCommentPropIcon = faComment as IconProp;
@@ -41,8 +42,10 @@ function MainView() {
             <div>
                 <div className='view-container'>
                     <div className='chat-list'>
-                        <button onClick={handleLogout}>Logout </button>
-                        <div>User Id: {userId}</div>
+                        <ChatList></ChatList>
+                        <div>
+                            <button onClick={handleLogout}>Logout </button>
+                        </div>
                     </div>
                     <div className='chat-view'>
                         <ChatView id={userId} username={userName} />

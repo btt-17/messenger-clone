@@ -48,6 +48,7 @@
 
 .chat-name {
     padding-top: 4px;
+    font-weight: bold;
 }
 
 
@@ -56,10 +57,24 @@
 /* ----------- Content ----------- */
 
 .chat-content {
-    overflow: auto;
+    overflow-y: auto;
     height: 80vh;
     padding: 2px 10px;
 }
+
+.chat-content::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-content * {
+    overflow-anchor: none;
+}
+
+#anchor {
+  overflow-anchor: auto;
+  height: 1px;
+}
+
 
 .receiver {
     display: flex;
@@ -118,11 +133,18 @@
 }
 .message-input input { 
     width: 60vw;
-    padding: 1px 9px;
+    padding: 4px 9px;
     font-size: 1.1em;
     border-radius: 10px;
     background-color: rgb(39, 39, 38);
     color: white;
+    border:none;
 }
+
+.message-input input:focus {
+    border:none;
+    outline: none;
+}
+
 
 

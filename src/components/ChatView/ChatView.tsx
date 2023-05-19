@@ -10,8 +10,8 @@ import {
     faPaperPlane,  
 } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import React, {useEffect, useState} from 'react';
-import { ListFormat } from 'typescript';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
+
 
 const faCirclePlusPropIcon = faCirclePlus as IconProp;
 const faCameraPropIcon = faCamera as IconProp;
@@ -61,8 +61,22 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
         }
     }
 
+    const ref = useRef<null | HTMLDivElement>(null);
+    useEffect(() => {
+        console.log(ref);
+        // if ( scrollBottomRef && scrollBottomRef.current ) {
+        //     scrollBottomRef.current.addEventListener('DOMNodeInserted', event => {
+        //         const { currentTarget: target } = event;
+        //         target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+        //     });
+        // }
+        if (  ref?.current ) {
+            ref?.current?.scrollIntoView();
+        }
+        
+    }, [messages.length])
 
-  
+   
 
     let button;
     if (userMessage === "") {
@@ -84,11 +98,11 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                     <div className='chat-name'>{props.username}</div>
                 </div>
             </div> 
-            <div className='chat-content'>
-                <div className='list-message'>
+            <div className='chat-content' >
+                <div className='list-message' >
                     {
                         messages.map((item,index) => (
-                            <div key={index} className={item.from}>
+                            <div key={index} className={item.from} ref={ref}>
                                 <div className="image">
                                     <div className='avatar'>
                                     </div>
@@ -98,6 +112,7 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                         ))
                     }
                 </div>
+                <div id="anchor" ></div>
             </div>
             <div className='send-message'>
                     <div className='option' >
