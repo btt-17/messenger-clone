@@ -64,12 +64,6 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
     const ref = useRef<null | HTMLDivElement>(null);
     useEffect(() => {
         console.log(ref);
-        // if ( scrollBottomRef && scrollBottomRef.current ) {
-        //     scrollBottomRef.current.addEventListener('DOMNodeInserted', event => {
-        //         const { currentTarget: target } = event;
-        //         target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
-        //     });
-        // }
         if (  ref?.current ) {
             ref?.current?.scrollIntoView();
         }
