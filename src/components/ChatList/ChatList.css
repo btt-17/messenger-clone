@@ -19,7 +19,7 @@
 
 .search-bar {
     display: flex;
-    margin: 0px 19px 10px;
+    margin: 0px 19px 15px;
     width: 21vw;
     padding: 1px 9px;
     font-size: 1.1em;
@@ -47,4 +47,43 @@
 .search-bar input:focus {
     border:none;
     outline:none;
+}
+
+
+.friend-lists {
+    display: flex;
+    padding: 1px 10px;
+    margin-bottom: 10px;
+
+}
+
+.friend-lists div {
+    width: 3vw;
+}
+
+.room {
+    margin-right: 2em;
+}
+
+.friend-lists .image {
+    background-color: rgb(57, 56, 56);
+    height: 55px;
+    width: 55px;
+    margin-bottom: 5px;
+}
+
+.friend-lists .logo {
+    height: 23px;
+    width: 23px;
+    margin: 16px 16px;
+}
+
+.friend-lists .list-text {
+    padding: 1px 2px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.friend-lists .avatar {
+  padding: 9px 3px; 
 }

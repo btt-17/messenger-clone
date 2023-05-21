@@ -34,7 +34,6 @@ type MessageProp = {
 }
 
 const ChatView: React.FC<ChatViewProps>  = (props) =>  {
-    const date = new Date();
     const [userMessage, setUserMessage] = useState('');
    
     const [messages, setMessages] = useState<MessageProp[]>([]);
