@@ -6,7 +6,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faComment, faVideo, faUserGroup, faClone } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ChatView from '../ChatView/ChatView';
-import ChatList from '../ChatList/ChatList';
+// import ChatList from '../ChatList/ChatList';
+import api from '../api';
+
+import {  faBars, faPenToSquare, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+const faBarsPropIcon = faBars as IconProp;
+const faPenToSquarePropIcon = faPenToSquare as IconProp;
+const faMagnifyingGlassPropIcon = faMagnifyingGlass as IconProp;
 
 
 const faCommentPropIcon = faComment as IconProp;
@@ -17,15 +23,32 @@ const faClonePropIcon = faClone as IconProp;
 
 
 function MainView() {
-    const [active, setActive] = useState(false);
-    const handleClick = () => {
-        setActive(!active);
-    };
+    const [chatRoomsId, setChatRoomsId] = useState(new Set<String>());
 
-    let userId = localStorage.getItem("userid");
+    let userId = localStorage.getItem("userid") ;
     let userName = localStorage.getItem("username");
 
+    if (chatRoomsId.size === 0) {
+        const getChatRoomsIdFromApi = async() => {
+            const res = await api.get('/api/chatRooms', {
+                params: {
+                    id: userId,
+                },
+                withCredentials: true,
+            })
+            
+            for (let i = 0; i < res.data.data.length; i ++ ) {
+                setChatRoomsId(chatRoomsId => new Set(chatRoomsId.add(res.data.data[i])));
+                
+            }
+            
+        }
 
+        getChatRoomsIdFromApi();
+
+       
+       
+    }
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -42,15 +65,52 @@ function MainView() {
             <div>
                 <div className='view-container'>
                     <div className='chat-list'>
-                        <ChatList></ChatList>
+                        {/* <ChatList chatRoomsId={chatRoomsId}></ChatList> */}
+
+                        {/* Chat List */}
+                        <div className='chat-list-header'>
+                                <FontAwesomeIcon className='logo' icon={faBarsPropIcon} />   
+                                <div className='text'>Chats</div>
+                                <FontAwesomeIcon className='logo' icon={faPenToSquarePropIcon} />   
+                            </div>
+                            <div className="search-bar">
+                                <FontAwesomeIcon className='logo' icon={faMagnifyingGlassPropIcon} />   
+                                <input type='text' placeholder='Search' ></input>
+                            </div>
+                            <div className='friend-lists'>
+                                <div className='room'>
+                                    <div className='image'>
+                                        <FontAwesomeIcon className='logo' icon={faVideoPropIcon} />   
+                                    </div>
+                                    <div className='list-text'>Create room</div>
+                                </div>
+
+                                {
+                                    Array.from(chatRoomsId.values()).map((item,index) => (
+                                        <div key={index} className="room">
+                                             <div className='image'>
+                                                <div className='avatar'> </div>
+                                            </div>
+                                            <div className='list-text'>{item}</div>
+                                        </div>
+                                    ))
+                                    
+                                }
+                        </div>
+                         {/* End of Chat List */}
+
                         <div>
                             <button onClick={handleLogout}>Logout </button>
                         </div>
                     </div>
+
+                     {/* View of Chat room */}
                     <div className='chat-view'>
-                        <ChatView id={userId} username={userName} />
+                        <ChatView id={userId} username={userName} chatRoomsId={null} />
                     </div>
                 </div>
+
+
                 <div className='footer-container'>
                    <div className='option' >
                         <FontAwesomeIcon className='logo' icon={faCommentPropIcon} />   

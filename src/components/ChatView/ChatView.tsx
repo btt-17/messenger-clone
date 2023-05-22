@@ -25,6 +25,7 @@ const faPaperPlanePropIcon = faPaperPlane as IconProp;
 interface ChatViewProps {
     id: string | null,
     username: string | null,
+    chatRoomsId: string | null,
 }
 
 

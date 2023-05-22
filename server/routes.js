@@ -4,7 +4,6 @@ const database = require('./database');
 
 router.post('/api/login', async(req,res) => {
     const dbConnect = database.getDb();
-
     const data = await dbConnect.collection("Users"). find({
         mail: req.body.mail,
         password: req.body.password,
@@ -21,6 +20,17 @@ router.post('/api/login', async(req,res) => {
         console.log("successfully")
     }
 
+})
+
+router.get('/api/chatRooms', async(req,res) => {
+    const dbConnect = database.getDb();
+    const data = await dbConnect.collection("Users"). find({
+        id: req.query.id,
+    }).toArray() ;
+
+    if (data.length !== 0 ) { 
+        res.status(200).json({data: data[0].chatroom});
+    }
 })
 
 module.exports = router

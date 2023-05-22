@@ -9,7 +9,12 @@ const faPenToSquarePropIcon = faPenToSquare as IconProp;
 const faMagnifyingGlassPropIcon = faMagnifyingGlass as IconProp;
 const faVideoPropIcon = faVideo as IconProp
 
-function ChatList () {
+interface ChatListProps {
+    chatRoomsId: Set<String>,
+}
+
+const  ChatList : React.FC<ChatListProps>  = (props) => {
+    console.log(props);
     return (
         <div>
             <div className='chat-list-header'>
