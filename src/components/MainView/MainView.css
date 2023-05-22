@@ -94,6 +94,7 @@
 
 
 .friend-lists {
+    overflow-x: auto;
     display: flex;
     padding: 1px 10px;
     margin-bottom: 10px;

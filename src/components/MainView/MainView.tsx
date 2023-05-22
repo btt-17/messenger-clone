@@ -1,5 +1,5 @@
 import './MainView.css';
-import  {useState} from 'react';
+import  {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,17 +20,21 @@ const faVideoPropIcon = faVideo as IconProp;
 const faUserGroupPropIcon = faUserGroup as IconProp;
 const faClonePropIcon = faClone as IconProp;
 
-
+type ChatRoomProp = {
+    id: String,
+    name: String,
+}
 
 function MainView() {
     const [chatRoomsId, setChatRoomsId] = useState(new Set<String>());
+    const [chatRooms, setChatRooms] = useState(new Set<string>());
 
     let userId = localStorage.getItem("userid") ;
     let userName = localStorage.getItem("username");
 
     if (chatRoomsId.size === 0) {
         const getChatRoomsIdFromApi = async() => {
-            const res = await api.get('/api/chatRooms', {
+            var res = await api.get('/api/chatRoomsId', {
                 params: {
                     id: userId,
                 },
@@ -39,16 +43,39 @@ function MainView() {
             
             for (let i = 0; i < res.data.data.length; i ++ ) {
                 setChatRoomsId(chatRoomsId => new Set(chatRoomsId.add(res.data.data[i])));
-                
             }
             
         }
-
-        getChatRoomsIdFromApi();
-
-       
-       
+        getChatRoomsIdFromApi();       
     }
+
+
+    if (chatRoomsId.size !== 0) {
+        for (let i = 0; i < chatRoomsId.size; i ++) {
+            let chatId = Array.from(chatRoomsId)[i];
+        
+            const getChatRoomName = async() => {
+                var res = await api.get("/api/chatRoomName", {
+                    params: {
+                        userId: userId,
+                        chatId: chatId,
+                    },
+                    withCredentials: true,
+                })
+        
+                
+                setChatRooms(chatRooms => new Set(chatRooms.add(JSON.stringify({
+                    id:chatId,
+                    name:res.data.data,
+                    }))))
+            }
+            getChatRoomName();
+        
+        } 
+        
+    }
+    
+    
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -86,12 +113,12 @@ function MainView() {
                                 </div>
 
                                 {
-                                    Array.from(chatRoomsId.values()).map((item,index) => (
+                                    Array.from(chatRooms.values()).map((item,index) => (
                                         <div key={index} className="room">
                                              <div className='image'>
                                                 <div className='avatar'> </div>
                                             </div>
-                                            <div className='list-text'>{item}</div>
+                                            <div className='list-text'>{JSON.parse(item).name}</div>
                                         </div>
                                     ))
                                     
