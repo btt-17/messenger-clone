@@ -6,5 +6,9 @@ Backend: Express, Node.js
 
 Database: MongoDB
 
+# Current View
+
+![](docs/currentView.png)
+
 
 
