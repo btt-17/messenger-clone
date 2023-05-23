@@ -10,7 +10,9 @@ import {
     faPaperPlane,  
 } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
+import {ReactComponent as MessengerDefaultLogo} from '../assests/icons8-facebook-messenger.svg'
+import api from '../api';
 
 
 const faCirclePlusPropIcon = faCirclePlus as IconProp;
@@ -23,9 +25,11 @@ const faPaperPlanePropIcon = faPaperPlane as IconProp;
 
 
 interface ChatViewProps {
-    id: string | null,
+    userid: string | null,
     username: string | null,
-    chatRoomsId: string | null,
+    chatRoomId: string | null,
+    chatRoomName: string | null,
+    chatAvatar:string | null,
 }
 
 
@@ -36,8 +40,8 @@ type MessageProp = {
 
 const ChatView: React.FC<ChatViewProps>  = (props) =>  {
     const [userMessage, setUserMessage] = useState('');
-   
     const [messages, setMessages] = useState<MessageProp[]>([]);
+
 
     useEffect(() => {
         const keyDownHandler = (event: { key: string; preventDefault: () => void; }) => {
@@ -53,11 +57,55 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
 
       }, []);
 
+    useEffect(() => {
+        setMessages([]);
+        if (props.chatRoomId !== ""){
+            const getMessages = async() => {
+                const res = await api.get('/api/chatRoom/messages', {
+                    params: {
+                        chatId: props.chatRoomId,
+                    },
+                    withCredentials: true,
+                })
+    
+               console.log(res.data.data, props.userid);
+
+               
+
+                for (let i = 1; i < res.data.data.length; i ++) {
+                    let message = res.data.data[i];
+                    console.log(message.content)
+                    if (message.from === props.userid) {
+                        setMessages(messages => [...messages, {content: message.content, from: "sender"}])
+                    } else {
+                        setMessages(messages => [...messages, {content: message.content, from: "receive"}])
+                    }
+                }
+            }
+    
+            getMessages();
+        }
+        
+    },[props.chatRoomId])
+
+
     const handleSendMessage = () => {
         // dummy_messages.push([userMessage,"sender"]);
         if (userMessage !== '') {
             setMessages(messages => [...messages, {content: userMessage, from: "sender"}])
             setUserMessage("");
+            const sendMessages = async() => {
+                const res = await api.post('/api/chatRoom/messages', {
+                    chatId: props.chatRoomId,
+                    content: userMessage,
+                    from: props.userid,
+                 
+                })
+    
+
+            }
+    
+            sendMessages();
         }
     }
 
@@ -79,68 +127,76 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
         button = <FontAwesomeIcon className='chat-option-logo' icon={faPaperPlanePropIcon} onClick={handleSendMessage}/>   ;
     }
 
-    return (
-        <div>
-            <div className='chat-head'>
-                <div className="chat-info">
-                    <div className='option' >
-                        <FontAwesomeIcon className='chat-option-logo' icon={faTableColumnsPropIcon} />   
+    if (props.chatRoomId === "") {
+        return (
+            <div>
+                 < MessengerDefaultLogo className='default-app-logo'/>
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <div className='chat-head'>
+                    <div className="chat-info">
+                        <div className='option' >
+                            <FontAwesomeIcon className='chat-option-logo' icon={faTableColumnsPropIcon} />   
+                        </div>
+                        <div className="image">
+                            <div className='avatar' style={{backgroundImage: `url(`+props.chatAvatar+`)`}}> </div>
+                        </div>
+                        <div className='chat-name'>{props.chatRoomName}</div>
                     </div>
-                    <div className="image">
-                        <div className='avatar'> </div>
-                    </div>
-                    <div className='chat-name'>{props.username}</div>
-                </div>
-            </div> 
-            <div className='chat-content' >
-                <div className='list-message' >
-                    {
-                        messages.map((item,index) => (
-                            <div key={index} className={item.from} ref={ref}>
-                                <div className="image">
-                                    <div className='avatar'>
+                </div> 
+                <div className='chat-content' >
+                    <div className='list-message' >
+                        {
+                            messages.map((item,index) => (
+                                <div key={index} className={item.from} ref={ref}>
+                                    <div className="image">
+                                        <div className='avatar' style={{backgroundImage: `url(`+props.chatAvatar+`)`}}>
+                                        </div>
                                     </div>
+                                    <span>{item.content}</span>
                                 </div>
-                                <span>{item.content}</span>
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
+                    </div>
+                    <div id="anchor" ></div>
                 </div>
-                <div id="anchor" ></div>
-            </div>
-            <div className='send-message'>
-                    <div className='option' >
-                        <FontAwesomeIcon className='chat-option-logo' icon={faCirclePlusPropIcon} />   
-                   </div>
-
-                   <div className='option' >
-                        <FontAwesomeIcon className='chat-option-logo' icon={faCameraPropIcon} />   
-                   </div>
-
-                   <div className='option' >
-                        <FontAwesomeIcon className='chat-option-logo' icon={faImagePropIcon} />   
-                   </div>
-
-                   <div className='option' >
-                        <FontAwesomeIcon className='chat-option-logo' icon={faMicrophonePropIcon} />   
-                   </div>
-
-                   <div className="message-input">
-                        <input type='text' placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
-                        onKeyUp={(e) => {
-                            if (e.key === "Enter") {
-                                handleSendMessage()
-                            }
-                        }}></input>
+                <div className='send-message'>
+                        <div className='option' >
+                            <FontAwesomeIcon className='chat-option-logo' icon={faCirclePlusPropIcon} />   
                     </div>
 
-                   <div className='option' >
-                        {button}
-                   </div>
+                    <div className='option' >
+                            <FontAwesomeIcon className='chat-option-logo' icon={faCameraPropIcon} />   
+                    </div>
 
+                    <div className='option' >
+                            <FontAwesomeIcon className='chat-option-logo' icon={faImagePropIcon} />   
+                    </div>
+
+                    <div className='option' >
+                            <FontAwesomeIcon className='chat-option-logo' icon={faMicrophonePropIcon} />   
+                    </div>
+
+                    <div className="message-input">
+                            <input type='text' placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSendMessage()
+                                }
+                            }}></input>
+                        </div>
+
+                    <div className='option' >
+                            {button}
+                    </div>
+
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default ChatView;

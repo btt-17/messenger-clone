@@ -2,6 +2,13 @@
     list-style: none;
 }
 
+.default-app-logo { 
+    height: 200px;
+    width: 200px;
+    margin-top: 18em ;
+    margin-left: 35em;
+}
+
 .chat-head {
     display: flex;
     height: 4vh;
@@ -44,6 +51,7 @@
     -moz-background-size: 100% !important;
     -o-background-size: 100% !important;
     background-size: 100% !important;
+    object-fit:cover;
 }
 
 .chat-name {
@@ -76,10 +84,6 @@
 }
 
 
-.receiver {
-    display: flex;
-    justify-content: flex-start;
-}
 
 .sender {
    margin: 20px 0px;
@@ -89,9 +93,10 @@
 }
 
 .sender span {
-    margin-left: 60vw;
+    max-width: 50vw;
+    word-wrap:break-word;
+    margin-left: 30vw;
     display: inline-block;
-    text-align: center;
     background-color: rgb(20, 94, 243); 
     padding: 8px 10px;
     border-radius: 14px;
@@ -99,15 +104,26 @@
 
 .sender .image {
     display: none;
+    
 }
 
-
-.receiver .image {
-    margin-right: 6px;
+.receive {
+    display: flex;
+    margin: 20px 0px;
+    justify-content: flex-start;
 }
-.receiver span {
+
+.receive .avatar {
+    position: relative;
+}
+
+.receive .image {
+    margin-right: 12px;
+}
+.receive span {
+    max-width: 50vw;
+    word-wrap:break-word;
     display: inline-block;
-    text-align: center;
     background-color: rgb(84, 85, 86); 
     padding: 8px 10px;
     border-radius: 14px;

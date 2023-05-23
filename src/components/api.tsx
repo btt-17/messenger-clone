@@ -5,7 +5,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.withCredentials = true
 
 let serverURL = 'http://localhost:8000'
-let defaultTimeout = 30000
+let defaultTimeout = 60000
 
 axios.defaults.baseURL = serverURL
 axios.defaults.timeout = defaultTimeout
