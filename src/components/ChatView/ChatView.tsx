@@ -13,6 +13,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import React, {useEffect, useState, useRef} from 'react';
 import {ReactComponent as MessengerDefaultLogo} from '../assests/icons8-facebook-messenger.svg'
 import api from '../api';
+import socket from '../socket'
 
 
 const faCirclePlusPropIcon = faCirclePlus as IconProp;
@@ -38,26 +39,58 @@ type MessageProp = {
     from: string,
 }
 
+type socketUpdateProp = {
+    content: string,
+    from: string,
+    _id: string
+}
+
+
+
 const ChatView: React.FC<ChatViewProps>  = (props) =>  {
     const [userMessage, setUserMessage] = useState('');
     const [messages, setMessages] = useState<MessageProp[]>([]);
+    const [inputHeight, setInputHeight] = useState(20);
+    const [socketUpdate, setSocketUpdate] = useState([""]);
+
+   
+    // useEffect(() => {
+    //     const keyDownHandler = (event: { key: string; preventDefault: () => void; }) => {
+    //       console.log('User pressed: ', event.key);
+    
+    //       if (event.key === 'Enter') {
+    //         event.preventDefault();
+    
+    //         // 👇️ call submit function here
+    //         handleSendMessage();
+    //       }
+    //     };
+
+    //   }, []);
 
 
     useEffect(() => {
-        const keyDownHandler = (event: { key: string; preventDefault: () => void; }) => {
-          console.log('User pressed: ', event.key);
-    
-          if (event.key === 'Enter') {
-            event.preventDefault();
-    
-            // 👇️ call submit function here
-            handleSendMessage();
-          }
-        };
+        socket.emit("checkMessage");
+        const listener =  (data:any) => {
+            const message  = Object.values(data)[0] as socketUpdateProp  ;
+            if (!socketUpdate.includes(message._id)){
+                setSocketUpdate(socketUpdate => [...socketUpdate, message._id])
 
-      }, []);
-
+                console.log(message, data);
+                if (message.from !== props.userid) {
+                    setMessages(messages => [...messages, {content: message.content, from: "receive"}])
+                }
+            }
+        }
+        socket.on("messageChange", listener);
+   
+        return () => { socket.off("messageChange",listener) }
+    }, [messages])
+  
     useEffect(() => {
+        // props.socket.on("checkMessage", ("")=> {console.log("check socket")});
+        // console.log(props.socket);
+
         setMessages([]);
         if (props.chatRoomId !== ""){
             const getMessages = async() => {
@@ -67,14 +100,9 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                     },
                     withCredentials: true,
                 })
-    
-               console.log(res.data.data, props.userid);
-
-               
 
                 for (let i = 1; i < res.data.data.length; i ++) {
                     let message = res.data.data[i];
-                    console.log(message.content)
                     if (message.from === props.userid) {
                         setMessages(messages => [...messages, {content: message.content, from: "sender"}])
                     } else {
@@ -87,11 +115,12 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
         }
         
     },[props.chatRoomId])
+    //[props.chatRoomId])
+
 
 
     const handleSendMessage = () => {
-        // dummy_messages.push([userMessage,"sender"]);
-        if (userMessage !== '') {
+        if (userMessage.replace(/\s/g, '').length){ // check if the input contains spaces only
             setMessages(messages => [...messages, {content: userMessage, from: "sender"}])
             setUserMessage("");
             const sendMessages = async() => {
@@ -111,14 +140,24 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
 
     const ref = useRef<null | HTMLDivElement>(null);
     useEffect(() => {
-        console.log(ref);
         if (  ref?.current ) {
             ref?.current?.scrollIntoView();
         }
         
     }, [messages.length])
 
-   
+    const textareaRef = useRef<null | HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        // console.log(textareaRef.current?.scrollHeight)
+        let h  = textareaRef.current?.scrollHeight || 20 ;
+        const trows = Math.ceil(h / 20) - 1; 
+       
+    }, [userMessage])
+
+    // const editMessage = (e: any) => {
+    //     setUserMessage(e.target.value)
+    // }   
 
     let button;
     if (userMessage === "") {
@@ -180,13 +219,15 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                             <FontAwesomeIcon className='chat-option-logo' icon={faMicrophonePropIcon} />   
                     </div>
 
-                    <div className="message-input">
-                            <input type='text' placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
+                    <div className="message-input"  >
+                            <textarea  ref={textareaRef}   style={{height: inputHeight+"px", maxHeight: "60px"}}  placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
                             onKeyUp={(e) => {
-                                if (e.key === "Enter") {
+                                if (e.key === "Enter" && !e.shiftKey) {
                                     handleSendMessage()
                                 }
-                            }}></input>
+
+
+                            }}></textarea>
                         </div>
 
                     <div className='option' >

@@ -95,7 +95,7 @@
 .sender span {
     max-width: 50vw;
     word-wrap:break-word;
-    margin-left: 30vw;
+    margin-left: 40vw;
     display: inline-block;
     background-color: rgb(20, 94, 243); 
     padding: 8px 10px;
@@ -121,7 +121,7 @@
     margin-right: 12px;
 }
 .receive span {
-    max-width: 50vw;
+    max-width: 35vw;
     word-wrap:break-word;
     display: inline-block;
     background-color: rgb(84, 85, 86); 
@@ -136,6 +136,7 @@
     justify-content: space-around;
     height: 5vh;
     padding: 1px 10px 3px;
+
 }
 
 .chat-option-logo {
@@ -145,19 +146,21 @@
 }
 
 .message-input {
+    height: 5vh;
     margin-right: 5px;
 }
-.message-input input { 
+.message-input textarea { 
     width: 60vw;
     padding: 4px 9px;
-    font-size: 1.1em;
+    font-size: 1.2em;
     border-radius: 10px;
     background-color: rgb(39, 39, 38);
     color: white;
     border:none;
+
 }
 
-.message-input input:focus {
+.message-input  textarea:focus{
     border:none;
     outline: none;
 }

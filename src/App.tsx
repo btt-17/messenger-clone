@@ -4,8 +4,11 @@ import {
   LoginForm,
   MainView,
 } from './components';
+import React, {useEffect, useState} from 'react';
+import socket from './components/socket'
 
 function App() {
+
   return (
     <div className="App">
        <Routes>  

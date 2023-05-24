@@ -3,12 +3,14 @@ import React, {useState} from 'react';
 import {ReactComponent as MessengerLogo} from '../assests/facebook-messenger-logo-svgrepo-com.svg'
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import socket from '../socket';
 
 function LoginForm() {
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [authenticated, setAuthenticated] = useState(localStorage.getItem(localStorage.getItem("authenticated") || "false"));
     const navigate = useNavigate();
+
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
@@ -32,7 +34,6 @@ function LoginForm() {
             
             console.log(localStorage.getItem("userid"));
             console.log(localStorage.getItem("username"));
-
             navigate("/");
         }
     }

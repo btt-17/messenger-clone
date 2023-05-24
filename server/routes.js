@@ -4,7 +4,7 @@ const database = require('./database');
 
 router.post('/api/login', async(req,res) => {
     const dbConnect = database.getDb();
-    const data = await dbConnect.collection("Users"). find({
+    const data = await dbConnect.collection("Users").find({
         mail: req.body.mail,
         password: req.body.password,
     }).toArray() ;
@@ -35,7 +35,7 @@ router.get('/api/chatRoomsId', async(req,res) => {
 
 router.get('/api/chatRoomName', async(req,res) => {
     const dbConnect = database.getDb();
-    const chatRoomData = await dbConnect.collection("Chatroom"). find({
+    const chatRoomData = await dbConnect.collection("Chatroom").find({
         id: req.query.chatId,
     }).toArray() ;
 
