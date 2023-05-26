@@ -40,6 +40,8 @@ router.get('/api/chatRoomName', async(req,res) => {
     }).toArray() ;
 
     const userIds = chatRoomData[0].users;
+    const messages = chatRoomData[0].messages
+    const currentMessage = messages[messages.length-1]
     var userIdforChat = ""
 
     if (userIds.length === 1) { 
@@ -60,6 +62,7 @@ router.get('/api/chatRoomName', async(req,res) => {
         res.status(200).json({
             data: userData[0].username,
             avatar: userData[0].avatar,
+            current: currentMessage,
         });
     }
 })

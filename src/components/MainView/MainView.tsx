@@ -75,11 +75,18 @@ function MainView() {
                         withCredentials: true,
                     })
             
+                    let current_message = res.data.current;
+                    
+                    if (current_message.from === userId) {
+                        current_message.content = "You: " + current_message.content;
+                    }
                     console.log(res.data);
+                    console.log(current_message.content);
                     setChatRooms(chatRooms => new Set(chatRooms.add(JSON.stringify({
                         id:chatId,
                         name:res.data.data,
                         avatar: res.data.avatar,
+                        current: current_message.content,
                     }))))
                 }
                 getChatRoomName();
@@ -150,8 +157,26 @@ function MainView() {
                                     ))
                                     
                                 }
-                        </div>
+                            </div>
                          {/* End of Chat List */}
+                         <div className='friend-lists-main'>
+                            {
+                                Array.from(chatRooms.values()).map((item,index) => (
+                                    <div key={index} className="room" onClick={() => selectRoom(index)}>
+                                            <div className='image'>
+                                            <div className='avatar' style={{backgroundImage: `url(`+JSON.parse(item).avatar+`)`}}> 
+                                            
+                                            </div>
+                                        </div>
+                                        <div className='list-text'>
+                                            <div className="list-name">{JSON.parse(item).name}</div>
+                                            <div className="current-message">{JSON.parse(item).current}</div>
+                                        </div>
+                                    </div>
+                                ))
+                                    
+                            }
+                         </div>
 
                         <div>
                             <button onClick={handleLogout}>Logout </button>

@@ -131,3 +131,33 @@
 .friend-lists .avatar {
   padding: 9px 3px; 
 }
+
+.friend-lists-main .room {
+    margin: 1em 1em 2em;
+    display: flex;
+    height: 3.8em;
+}
+
+.friend-lists-main .avatar, .image { 
+    height: 65px;
+    width: 65px;
+    margin-right: 2.5em;
+}
+
+.friend-lists-main .list-text { 
+    padding-top: .35em;
+}
+
+.friend-lists-main .list-text * {
+    margin-top: .2em;
+}
+
+.friend-lists-main .list-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.friend-lists-main .current-message {
+    font-size: 15px;
+    color:rgb(118, 119, 119)
+}
