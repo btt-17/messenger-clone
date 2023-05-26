@@ -8,13 +8,14 @@ const socket = (socketIO) =>{
         const collection =  dbConnect.collection("Chatroom")
         const changeStream = collection.watch([], { fullDocument: 'updateLookup' });
   
-        s.on('checkMessage', async () => {
+        s.on('checkMessage',  (chat_id) => {
+            // console.log(chat_id)
             changeStream.on("change", (event) => {
-                if (event.operationType === 'update'   ) {
+                if (event.operationType === 'update' && event.fullDocument.id === chat_id   ) {
                     console.log(event)
                     const data = Object.values(event.updateDescription.updatedFields)
                     data[0]['_id'] = event._id._data;
-                    console.log(data)
+                    // console.log(data)
                     s.emit("messageChange", data);
                 }
             })

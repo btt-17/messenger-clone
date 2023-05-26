@@ -53,38 +53,32 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
     const [inputHeight, setInputHeight] = useState(20);
     const [socketUpdate, setSocketUpdate] = useState([""]);
 
-   
-    // useEffect(() => {
-    //     const keyDownHandler = (event: { key: string; preventDefault: () => void; }) => {
-    //       console.log('User pressed: ', event.key);
-    
-    //       if (event.key === 'Enter') {
-    //         event.preventDefault();
-    
-    //         // 👇️ call submit function here
-    //         handleSendMessage();
-    //       }
-    //     };
-
-    //   }, []);
-
 
     useEffect(() => {
-        socket.emit("checkMessage");
+        socket.emit("checkMessage", props.chatRoomId);
+        let i = 0;
         const listener =  (data:any) => {
             const message  = Object.values(data)[0] as socketUpdateProp  ;
-            if (!socketUpdate.includes(message._id)){
-                setSocketUpdate(socketUpdate => [...socketUpdate, message._id])
 
-                console.log(message, data);
+            if (!socketUpdate.includes(message._id)){
+               
+                console.log( socketUpdate.length,  socketUpdate.includes(message._id))
+                i += 1;
+                console.log(i);
+                socketUpdate.push(message._id)
+
+               
                 if (message.from !== props.userid) {
-                    setMessages(messages => [...messages, {content: message.content, from: "receive"}])
+                     setMessages(messages => [...messages, {content: message.content, from: "receive"}])
                 }
             }
+
+           
         }
         socket.on("messageChange", listener);
+      
    
-        return () => { socket.off("messageChange",listener) }
+        // return () => { socket.off("messageChange",listener) }
     }, [messages])
   
     useEffect(() => {
