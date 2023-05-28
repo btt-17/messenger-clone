@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faComment, faVideo, faUserGroup, faClone } from '@fortawesome/free-solid-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ChatView from '../ChatView/ChatView';
-// import ChatList from '../ChatList/ChatList';
 import api from '../api';
 import socket from '../socket';
 import {  faBars, faPenToSquare, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import Message from "../Message/Message"
 
 const faBarsPropIcon = faBars as IconProp;
 const faPenToSquarePropIcon = faPenToSquare as IconProp;
@@ -21,12 +21,6 @@ const faVideoPropIcon = faVideo as IconProp;
 const faUserGroupPropIcon = faUserGroup as IconProp;
 const faClonePropIcon = faClone as IconProp;
 
-
-
-type ChatRoomProp = {
-    id: String,
-    name: String,
-}
 
 function MainView() {
     
@@ -76,10 +70,11 @@ function MainView() {
                     })
             
                     let current_message = res.data.current;
-                    
+                    let sender = "";
                     if (current_message.from === userId) {
-                        current_message.content = "You: " + current_message.content;
+                        sender = "You: " ;
                     }
+                  
                     console.log(res.data);
                     console.log(current_message.content);
                     setChatRooms(chatRooms => new Set(chatRooms.add(JSON.stringify({
@@ -87,6 +82,9 @@ function MainView() {
                         name:res.data.data,
                         avatar: res.data.avatar,
                         current: current_message.content,
+                        from: current_message.from,
+                        type: current_message.type,
+                        sender: sender,
                     }))))
                 }
                 getChatRoomName();
@@ -170,7 +168,11 @@ function MainView() {
                                         </div>
                                         <div className='list-text'>
                                             <div className="list-name">{JSON.parse(item).name}</div>
-                                            <div className="current-message">{JSON.parse(item).current}</div>
+                                             <div className="current-message">
+                                                {JSON.parse(item).sender}
+                                                <Message content={JSON.parse(item).current} from={JSON.parse(item).from} type={JSON.parse(item).type} />
+                                            </div> 
+                                            
                                         </div>
                                     </div>
                                 ))

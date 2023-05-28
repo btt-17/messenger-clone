@@ -14,7 +14,8 @@ import React, {useEffect, useState, useRef} from 'react';
 import {ReactComponent as MessengerDefaultLogo} from '../assests/icons8-facebook-messenger.svg'
 import api from '../api';
 import socket from '../socket'
-
+import {MessageProp, ChatViewProps, socketUpdateProp} from "../Type";
+import Message from "../Message/Message";
 
 const faCirclePlusPropIcon = faCirclePlus as IconProp;
 const faCameraPropIcon = faCamera as IconProp;
@@ -24,26 +25,6 @@ const faThumbsUpPropIcon = faThumbsUp as IconProp;
 const faTableColumnsPropIcon = faTableColumns as IconProp;
 const faPaperPlanePropIcon = faPaperPlane as IconProp;
 
-
-interface ChatViewProps {
-    userid: string | null,
-    username: string | null,
-    chatRoomId: string | null,
-    chatRoomName: string | null,
-    chatAvatar:string | null,
-}
-
-
-type MessageProp = {
-    content: string,
-    from: string,
-}
-
-type socketUpdateProp = {
-    content: string,
-    from: string,
-    _id: string
-}
 
 
 
@@ -69,7 +50,7 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
 
                
                 if (message.from !== props.userid) {
-                     setMessages(messages => [...messages, {content: message.content, from: "receive"}])
+                     setMessages(messages => [...messages, {content: message.content, from: "receive", type: message.type}])
                 }
             }
 
@@ -98,9 +79,9 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                 for (let i = 1; i < res.data.data.length; i ++) {
                     let message = res.data.data[i];
                     if (message.from === props.userid) {
-                        setMessages(messages => [...messages, {content: message.content, from: "sender"}])
+                        setMessages(messages => [...messages, {content: message.content, from: "sender", type: message.type}])
                     } else {
-                        setMessages(messages => [...messages, {content: message.content, from: "receive"}])
+                        setMessages(messages => [...messages, {content: message.content, from: "receive", type: message.type}])
                     }
                 }
             }
@@ -113,24 +94,36 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
 
 
 
-    const handleSendMessage = () => {
-        if (userMessage.replace(/\s/g, '').length){ // check if the input contains spaces only
-            setMessages(messages => [...messages, {content: userMessage, from: "sender"}])
-            setUserMessage("");
+    const handleSendMessage = (type: string) => {
+        if (userMessage.replace(/\s/g, '').length || type==="icon"){ // check if the input contains spaces only
+            
             const sendMessages = async() => {
-                const res = await api.post('/api/chatRoom/messages', {
-                    chatId: props.chatRoomId,
-                    content: userMessage,
-                    from: props.userid,
-                 
-                })
-    
-
+                if (type === "string"){
+                    setMessages(messages => [...messages, {content: userMessage, from: "sender", type: type}])
+                    setUserMessage("")
+                    await api.post('/api/chatRoom/messages', {
+                        chatId: props.chatRoomId,
+                        content: userMessage,
+                        from: props.userid,
+                        type: type,
+                    })
+                } 
+                if (type === "icon"){
+                    setMessages(messages => [...messages, {content: "like", from: "sender", type: type}])
+                    await api.post('/api/chatRoom/messages', {
+                        chatId: props.chatRoomId,
+                        content: "like",
+                        from: props.userid,
+                        type: type,
+                    })
+                }
+                
             }
-    
+
             sendMessages();
         }
     }
+
 
     const ref = useRef<null | HTMLDivElement>(null);
     useEffect(() => {
@@ -155,10 +148,11 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
 
     let button;
     if (userMessage === "") {
-        button = <FontAwesomeIcon className='chat-option-logo' icon={faThumbsUpPropIcon} />   ;
+        button = <FontAwesomeIcon className='chat-option-logo' icon={faThumbsUpPropIcon} onClick={() => handleSendMessage("icon")}/>   ;
     } else {
-        button = <FontAwesomeIcon className='chat-option-logo' icon={faPaperPlanePropIcon} onClick={handleSendMessage}/>   ;
+        button = <FontAwesomeIcon className='chat-option-logo' icon={faPaperPlanePropIcon} onClick={() => handleSendMessage("string")}/>   ;
     }
+
 
     if (props.chatRoomId === "") {
         return (
@@ -189,8 +183,11 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                                         <div className='avatar' style={{backgroundImage: `url(`+props.chatAvatar+`)`}}>
                                         </div>
                                     </div>
-                                    <span>{item.content}</span>
+                                    {/* <span>{item.content}</span> */}
+                                    {/* {renderMessage(item.content, item.type)} */}
+                                   <Message content={item.content} from={item.from} type={item.type}/>
                                 </div>
+                                
                             ))
                         }
                     </div>
@@ -217,7 +214,7 @@ const ChatView: React.FC<ChatViewProps>  = (props) =>  {
                             <textarea  ref={textareaRef}   style={{height: inputHeight+"px", maxHeight: "60px"}}  placeholder='Aa' value={userMessage} onChange={(e) => setUserMessage(e.target.value)}
                             onKeyUp={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
-                                    handleSendMessage()
+                                    handleSendMessage("string")
                                 }
 
 
